@@ -1,0 +1,78 @@
+[package]
+name = "moonclient"
+version = "0.1.0"
+authors = ["DinaMoon"]
+edition = "2024"
+description = "Resilient, enterprise-grade HTTP client engine with autonomous Token Bucket rate limiting, lifecycle hooks, and Project Fluent i18n."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/DinaMoon/moonclient"
+homepage = "https://github.com/DinaMoon/moonclient"
+documentation = "https://docs.rs/moonclient"
+readme = "README.md"
+keywords = ["http-client", "rate-limiting", "middleware", "reqwest", "resilience"]
+categories = ["web-programming::http-client", "network-programming", "asynchronous"]
+publish = true
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = []
+# Enables XML response extraction via quick-xml
+xml = ["dep:quick-xml"]
+# Enables distributed rate limiting backed by a shared Redis instance
+redis-limit = ["dep:redis"]
+
+[dependencies]
+# Asynchronous Runtime (tailored subset to keep dependency graph lightweight)
+tokio = { version = "1.53", features = ["rt", "rt-multi-thread", "macros", "time"] }
+
+# Serialization & Deserialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+quick-xml = { version = "0.42", features = ["serialize"], optional = true }
+
+# Byte buffers & Stream handling
+bytes = "1.12"
+
+# Diagnostic Logging
+log = { version = "0.4", features = ["std"] }
+
+# Error Management
+thiserror = "2.0"
+
+# Utilities & Time
+chrono = { version = "0.4", features = ["serde"] }
+url = "2.5"
+
+# Networking & Middleware Pipeline
+http = "1.0"
+reqwest = { version = "0.13", default-features = false, features = ["rustls", "json", "stream", "cookies", "multipart"] }
+reqwest-middleware = { version = "0.5", features = ["rustls", "json", "multipart", "query"] }
+reqwest-retry = "0.9"
+reqwest-tracing = "0.7"
+
+# Rate Limiting Engine (In-Memory Token Bucket)
+governor = "0.10"
+nonzero_ext = "0.3"
+
+# Asynchronous Trait Support
+async-trait = "0.1"
+
+# Internationalization & Localization (Mozilla Project Fluent)
+fluent = "0.17"
+intl-memoizer = "0.5"
+unic-langid = "0.9"
+sys-locale = "0.3"
+
+# Optional Distributed Rate Limiting via Redis
+redis = { version = "1.6", features = ["tokio-comp", "connection-manager"], optional = true }
+
+[dev-dependencies]
+anyhow = "1.0"
+dotenvy = "0.15"
+env_logger = "0.11"
+pretty_assertions = "1.4"
+tokio = { version = "1.53", features = ["full"] }
+mimalloc = "0.1"
