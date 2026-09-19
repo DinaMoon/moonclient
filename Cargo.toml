@@ -1,6 +1,6 @@
 [package]
 name = "moonclient"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["DinaMoon"]
 edition = "2024"
 description = "Resilient, enterprise-grade HTTP client engine with autonomous Token Bucket rate limiting, lifecycle hooks, and Project Fluent i18n."
