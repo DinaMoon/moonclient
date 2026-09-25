@@ -58,7 +58,7 @@
 
 ```toml
 [dependencies]
-moonclient = "0.1.0"
+moonclient = "0.1"
 tokio = { version = "1.53", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 ```
@@ -76,7 +76,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 struct Todo {
-    id: u32,
+    id: u64,
     title: String,
     completed: bool,
 }
@@ -172,7 +172,7 @@ let client = MoonClient::builder(DefaultHook)
 Макрос `build_url!` автоматически конвертирует любые типы данных, реализующие [`IntoSegment`]:
 
 ```rust
-let user_id = 42_u32;
+let user_id = 42;
 let route = "profile";
 
 // Результат: https://api.site.com/users/42/profile
