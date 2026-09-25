@@ -175,10 +175,17 @@ impl InMemoryLimiter {
     /// let limiter = InMemoryLimiter::new(strategy);
     /// println!("InMemoryLimiter initialized with default strategy");
     /// ```
-    pub(crate) fn new(strategy: RateLimitStrategy) -> Self {
+    pub fn new(strategy: RateLimitStrategy) -> Self {
         Self {
             strategy: Arc::new(std::sync::RwLock::new(strategy)),
         }
+    }
+}
+
+impl Default for InMemoryLimiter {
+    /// Instantiates an in-memory limiter with an empty initial rate limiting strategy.
+    fn default() -> Self {
+        Self::new(RateLimitStrategy::default())
     }
 }
 

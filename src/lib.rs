@@ -19,7 +19,7 @@
 //!
 //! #[derive(Debug, Deserialize)]
 //! struct UserProfile {
-//!     id: u32,
+//!     id: u64,
 //!     username: String,
 //!     is_active: bool,
 //! }
@@ -43,7 +43,7 @@
 //!         .build();
 //!
 //!     // 3. Construct the endpoint safely with zero heap allocations
-//!     let user_id = 42_u32;
+//!     let user_id = 42;
 //!     let endpoint = build_url!(client, "users", user_id, "profile")?;
 //!
 //!     // 4. Dispatch request and extract typed JSON in one expression
@@ -153,6 +153,7 @@ pub mod response;
 pub use client::{MoonClient, MoonClientBuilder};
 pub use error::{MoonError, Result};
 pub use hooks::ClientHook;
+pub use i18n::{register_resource, set_global_locale};
 pub use limiter::{InMemoryLimiter, RequestLimiter};
 pub use response::FromResponse;
 
@@ -206,7 +207,7 @@ pub use limiter::RedisLimiter;
 /// # impl MockClient { fn base_url(&self) -> &url::Url { &self.base_url } }
 /// # let client = MockClient { base_url: url::Url::parse("https://api.test.com")? };
 /// let route = ApiRoute::Users;
-/// let user_id = 940032_u32;
+/// let user_id = 940032;
 ///
 /// // Notice how both `route` and `user_id` are passed without manual `.to_string()` calls:
 /// let endpoint = build_url!(client, route, user_id)?;
@@ -302,7 +303,7 @@ impl<'a, T: IntoSegment + ?Sized> IntoSegment for &'a T {
 /// # struct MockClient { base_url: url::Url }
 /// # impl MockClient { fn base_url(&self) -> &url::Url { &self.base_url } }
 /// # let client = MockClient { base_url: url::Url::parse("https://api.site.com/api/v2")? };
-/// let target_user = 1007_u32;
+/// let target_user = 1007;
 /// let action = "deactivate";
 ///
 /// // Result: "https://api.site.com/api/v2/users/1007/deactivate"

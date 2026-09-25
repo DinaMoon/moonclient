@@ -24,7 +24,7 @@
 //!
 //! #[derive(Debug, Deserialize)]
 //! struct Post {
-//!     id: u32,
+//!     id: u64,
 //!     title: String,
 //! }
 //!
@@ -90,8 +90,8 @@ pub(crate) type ClientRateLimiter =
 ///
 /// Holds an [`std::sync::Arc`]-wrapped vector of active rate limiter instances alongside
 /// their corresponding sliding window durations for fast cloning on the critical execution path.
-#[derive(Clone)]
-pub(crate) struct RateLimitStrategy {
+#[derive(Clone, Default)]
+pub struct RateLimitStrategy {
     /// Active rate limiters paired with their duration windows (RPS/RPM).
     pub(crate) limiters: Arc<Vec<(Duration, Arc<ClientRateLimiter>)>>,
 }
@@ -498,7 +498,7 @@ impl<H: ClientHook> MoonClient<H> {
     /// # use moonclient::response::Json;
     /// # use moonclient::{ClientHook, MoonClient, Result};
     /// # use serde::Deserialize;
-    /// # #[derive(Deserialize)] struct Item { id: u32 }
+    /// # #[derive(Deserialize)] struct Item { id: u64 }
     /// # async fn doc_example<H: ClientHook>(client: &MoonClient<H>) -> Result<()> {
     /// let request = client.get("https://api.site.com/item/1");
     /// let Json(item): Json<Item> = client.execute(request).await?;

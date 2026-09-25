@@ -27,9 +27,9 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 struct MockTodo {
     /// Authoring user identifier.
     #[serde(rename = "userId")]
-    user_id: u32,
+    user_id: u64,
     /// Unique task identifier.
-    id: u32,
+    id: u64,
     /// Task title string.
     title: String,
     /// Task completion flag.
@@ -102,7 +102,7 @@ fn it_test_url_macro_building_ok() {
     let category = "comments";
 
     // Build the target URL on the fly
-    let computed_url = build_url!(client, "target", category, target_id);
+    let computed_url = build_url!(client, "target", category, target_id).unwrap();
 
     assert_eq!(
         computed_url.as_str(),
@@ -162,7 +162,7 @@ async fn it_test_network_get_json_ok() {
         .with_base_url("https://jsonplaceholder.typicode.com")
         .build();
 
-    let url = build_url!(client, "todos", 1);
+    let url = build_url!(client, "todos", 1).unwrap();
     let request = client.get(url);
 
     // Extract typed model from the HTTP response
@@ -187,7 +187,7 @@ async fn it_test_network_post_void_ok() {
         .with_base_url("https://jsonplaceholder.typicode.com")
         .build();
 
-    let url = build_url!(client, "todos");
+    let url = build_url!(client, "todos").unwrap();
     let payload = MockTodo {
         user_id: 10,
         id: 201,

@@ -27,9 +27,9 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 struct Todo {
     /// Identifier of the user authoring this item.
     #[serde(rename = "userId")]
-    user_id: u32,
+    user_id: u64,
     /// Unique numeric primary key of the task.
-    id: u32,
+    id: u64,
     /// Textual title describing the task.
     title: String,
     /// Boolean flag indicating task completion status.
@@ -106,7 +106,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // =========================================================================
     log::info!("📬 Executing asynchronous GET request to /todos/1...");
 
-    let todo_url = moonclient::build_url!(client, "todos", 1);
+    let todo_url = moonclient::build_url!(client, "todos", 1)?;
     let get_request = client.get(todo_url);
 
     // Extract strongly typed model using the Json extractor
@@ -121,7 +121,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // =========================================================================
     log::info!("📬 Executing asynchronous POST request to create a Todo...");
 
-    let create_url = moonclient::build_url!(client, "todos");
+    let create_url = moonclient::build_url!(client, "todos")?;
     let new_todo = Todo {
         user_id: 1,
         id: 201,

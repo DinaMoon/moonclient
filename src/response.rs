@@ -21,7 +21,7 @@
 //!
 //! ```rust,no_run
 //! use moonclient::response::Json;
-//! use moonclient::{MoonClient, Result};
+//! use moonclient::{ClientHook, MoonClient, Result};
 //! use serde::Deserialize;
 //!
 //! #[derive(Debug, Deserialize)]
@@ -30,7 +30,7 @@
 //!     version: String,
 //! }
 //!
-//! # async fn doc_example(client: &MoonClient) -> Result<()> {
+//! # async fn doc_example<H: ClientHook>(client: &MoonClient<H>) -> Result<()> {
 //! let request = client.get("https://api.site.com/health");
 //!
 //! // The extractor pattern automatically decodes the body based on type inference
@@ -148,9 +148,9 @@ pub trait FromResponse: Sized {
 /// # Example
 ///
 /// ```rust,no_run
-/// use moonclient::{MoonClient, Result};
+/// use moonclient::{ClientHook, MoonClient, Result};
 ///
-/// # async fn doc_example(client: &MoonClient) -> Result<()> {
+/// # async fn doc_example<H: ClientHook>(client: &MoonClient<H>) -> Result<()> {
 /// let delete_request = client.delete("https://api.site.com/items/123");
 ///
 /// // Extracting unit `()` confirms successful HTTP 204 No Content or 200 OK
@@ -189,10 +189,10 @@ impl FromResponse for () {
 /// # Example
 ///
 /// ```rust,no_run
-/// use moonclient::{MoonClient, Result};
+/// use moonclient::{ClientHook, MoonClient, Result};
 /// use reqwest::Response;
 ///
-/// # async fn doc_example(client: &MoonClient) -> Result<()> {
+/// # async fn doc_example<H: ClientHook>(client: &MoonClient<H>) -> Result<()> {
 /// let download_request = client.get("https://site.com/large_archive.zip");
 ///
 /// // Extract raw response stream for custom chunk-by-chunk processing
@@ -226,19 +226,19 @@ impl FromResponse for reqwest::Response {
 ///
 /// ```rust,no_run
 /// use moonclient::response::Json;
-/// use moonclient::{MoonClient, Result};
+/// use moonclient::{ClientHook, MoonClient, Result};
 /// use serde::Deserialize;
 ///
 /// #[derive(Debug, Deserialize)]
 /// struct User {
-///     id: u32,
+///     id: u64,
 ///     name: String,
 /// }
 ///
-/// # async fn doc_example(client: &MoonClient) -> Result<()> {
+/// # async fn doc_example<H: ClientHook>(client: &MoonClient<H>) -> Result<()> {
 /// let request = client.get("https://api.site.com/users/1");
 ///
-/// // Tuple pattern matching un緻wraps the inner `User` directly
+/// // Tuple pattern matching unwraps the inner `User` directly
 /// let Json(user): Json<User> = client.execute(request).await?;
 /// println!("Loaded user: {}", user.name);
 /// # Ok(())
@@ -295,7 +295,7 @@ impl<T: serde::de::DeserializeOwned> FromResponse for Json<T> {
 /// # #[cfg(feature = "xml")]
 /// # {
 /// use moonclient::response::Xml;
-/// use moonclient::{MoonClient, Result};
+/// use moonclient::{ClientHook, MoonClient, Result};
 /// use serde::Deserialize;
 ///
 /// #[derive(Debug, Deserialize)]
@@ -303,7 +303,7 @@ impl<T: serde::de::DeserializeOwned> FromResponse for Json<T> {
 ///     title: String,
 /// }
 ///
-/// # async fn doc_example(client: &MoonClient) -> Result<()> {
+/// # async fn doc_example<H: ClientHook>(client: &MoonClient<H>) -> Result<()> {
 /// let request = client.get("https://site.com/feed.xml");
 /// let Xml(feed): Xml<RssFeed> = client.execute(request).await?;
 /// println!("Feed title: {}", feed.title);
